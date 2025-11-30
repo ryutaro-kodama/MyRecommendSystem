@@ -46,7 +46,7 @@ export const Login: React.FC = () => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="p-8 bg-white rounded shadow-md w-full max-w-md">
-                <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Login</h2>
+                <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">ログイン</h2>
                 {error && (
                     <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-sm">
                         {error}
