@@ -54,7 +54,7 @@ export const Login: React.FC = () => {
                 )}
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Username</label>
+                        <label className="block text-sm font-medium text-gray-700">ユーザー名</label>
                         <input
                             type="text"
                             className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -64,7 +64,7 @@ export const Login: React.FC = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Password</label>
+                        <label className="block text-sm font-medium text-gray-700">パスワード</label>
                         <input
                             type="password"
                             className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
