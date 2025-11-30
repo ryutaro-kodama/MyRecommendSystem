@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: Recommendation System API
+  description: API for the Recommendation System Backend
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local Development Server
+
+paths:
+  /vectorizeProduct:
+    post:
+      summary: Vectorize Product Description
+      description: Accepts a product description, generates an embedding using OpenAI, and saves it to S3.
+      operationId: vectorizeProduct
+      requestBody:
+        description: Product description text
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+              example: "A high-quality leather wallet with multiple card slots."
+      responses:
+        '200':
+          description: Vectorization successful
+        '500':
+          description: Internal Server Error
+
+  /describeImage:
+    post:
+      summary: Describe Product Image
+      description: Accepts an image URL, uses OpenAI Vision to generate a description.
+      operationId: describeImage
+      requestBody:
+        description: URL of the product image
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+              format: uri
+              example: "https://example.com/product-image.jpg"
+      responses:
+        '200':
+          description: Image description generated successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "The image shows a brown leather wallet..."
+        '500':
+          description: Internal Server Error
