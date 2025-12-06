@@ -15,13 +15,13 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 };
 
 const MainLayout: React.FC = () => {
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
   return (
     <div className="app-container">
       <header className="app-header">
         <h1>Recommendation System Admin</h1>
         <div className="user-info">
-          <span>Welcome, {user}</span>
+          <span>Welcome</span>
           <button onClick={logout} className="logout-btn">Logout</button>
         </div>
       </header>
