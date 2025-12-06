@@ -1,0 +1,52 @@
+name: Backend Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./backend
+
+    # Permissions required for OIDC
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        # Tests are skipped for deployment speed, but can be enabled if desired
+        run: ./gradlew build -x test
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ap-northeast-1
+
+      - name: Deploy to AWS Lambda
+        # PLEASE UPDATE 'YOUR_LAMBDA_FUNCTION_NAME' with your actual Lambda function name
+        run: |
+          aws lambda update-function-code \
+            --function-name MyRecommendSystem \
+            --zip-file fileb://build/libs/recommend-system-0.0.1-SNAPSHOT.jar
