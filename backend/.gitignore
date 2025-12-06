@@ -1,0 +1,37 @@
+# Gradle files
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# Java class files
+*.class
+
+# Log files
+*.log
+
+# Mac
+.DS_Store
+
+# Spring Boot
+.mvn/
+mvnw
+mvnw.cmd
+
+# Local environment variables
+.env
