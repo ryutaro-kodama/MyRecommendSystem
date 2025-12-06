@@ -23,8 +23,7 @@ public class OpenAIService {
     public List<Double> getEmbedding(String text) {
         Map<String, Object> request = Map.of(
                 "model", "text-embedding-3-small",
-                "input", text
-        );
+                "input", text);
 
         Map response = restClient.post()
                 .uri("/embeddings")
@@ -39,18 +38,21 @@ public class OpenAIService {
 
     public String describeImage(String imageUrl) {
         Map<String, Object> request = Map.of(
-                "model", "gpt-4o",
+                "model", "gpt-5",
                 "messages", List.of(
                         Map.of(
                                 "role", "user",
                                 "content", List.of(
-                                        Map.of("type", "text", "text", "Describe this image in detail."),
-                                        Map.of("type", "image_url", "image_url", Map.of("url", imageUrl))
-                                )
-                        )
-                ),
-                "max_tokens", 300
-        );
+                                        Map.of("type", "text", "text",
+                                                """
+                                                        画像の商品を日本語で詳しく説明してください。説明の形式は以下のJSON形式で出力してください。
+                                                        
+                                                        {'color': '商品の色', 'quantity': '商品の質感',
+                                                         'genre': '商品のジャンル', 'description': 'その他商品の見た目の説明'}
+                                                        """),
+                                        Map.of("type", "image_url", "image_url",
+                                                Map.of("url", imageUrl))))),
+                "max_completion_tokens", 2000);
 
         Map response = restClient.post()
                 .uri("/chat/completions")
