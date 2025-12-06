@@ -24,9 +24,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-function-context'
     implementation 'org.springframework.cloud:spring-cloud-starter-function-web' // For local testing
     implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws'
-    
-    implementation platform('software.amazon.awssdk:bom:2.21.0')
-    implementation 'software.amazon.awssdk:s3'
+
+    implementation platform('software.amazon.awssdk:bom:2.38.2')
+    implementation 'software.amazon.awssdk:s3vectors'
     
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
