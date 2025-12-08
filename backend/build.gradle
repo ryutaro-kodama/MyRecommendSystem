@@ -25,6 +25,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-function-context'
     implementation 'org.springframework.cloud:spring-cloud-starter-function-web' // For local testing
     implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws'
+    implementation 'com.amazonaws:aws-lambda-java-events:3.11.4'
 
     implementation platform('software.amazon.awssdk:bom:2.38.2')
     implementation 'software.amazon.awssdk:s3vectors'

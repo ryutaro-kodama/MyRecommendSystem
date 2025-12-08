@@ -13,13 +13,13 @@ import software.amazon.awssdk.services.s3vectors.model.VectorData;
 public class S3VectorsRepository {
     private final S3VectorsClient s3VectorsClient;
 
-    @Value("s3.vector.bucket-name")
+    @Value("${s3.vector.bucket-name}")
     private String S3_VECTOR_BUCKET;
 
-    @Value("s3.vector.index-name")
+    @Value("${s3.vector.index-name}")
     private String S3_INDEX_NAME;
 
-    @Value("s3.vector.index-arn")
+    @Value("${s3.vector.index-arn}")
     private String S3_INDEX_ARN;
 
     public S3VectorsRepository(S3VectorsClient s3VectorsClient) {
