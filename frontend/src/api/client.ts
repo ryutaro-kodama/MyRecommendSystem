@@ -9,6 +9,19 @@ export const client = axios.create({
     },
 });
 
+client.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('idToken');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
 export const vectorizeProduct = async (description: string) => {
     // Spring Cloud Function exposes functions at endpoints matching their names
     // For Consumer<String>, it usually accepts the body as the input.
