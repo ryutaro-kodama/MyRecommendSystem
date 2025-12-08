@@ -36,7 +36,7 @@ jobs:
 
       - name: Build with Gradle
         # Tests are skipped for deployment speed, but can be enabled if desired
-        run: ./gradlew build -x test
+        run: ./gradlew clean shadowJar -x test
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
