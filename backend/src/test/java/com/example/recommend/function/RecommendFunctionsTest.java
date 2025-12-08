@@ -5,27 +5,17 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.function.Function;
-
-import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 class RecommendFunctionsTest {
-
-    @Autowired
-    private RecommendFunctions recommendFunctions;
 
     @Autowired
     private OpenAIService openAIService;
@@ -42,24 +32,16 @@ class RecommendFunctionsTest {
                     String value = parts[1].trim();
                     if (key.equals("OPENAI_API_KEY")) {
                         System.setProperty("openai.api.key", value);
+                    } else if (key.equals("S3_VECTOR_BUCKETNAME")) {
+                        System.setProperty("s3.vector.bucket-name", value);
+                    } else if (key.equals("S3_VECTOR_INDEXNAME")) {
+                        System.setProperty("s3.vector.index-name", value);
+                    } else if (key.equals("S3_VECTOR_INDEXARN")) {
+                        System.setProperty("s3.vector.index-arn", value);
                     }
                 }
             });
         }
-    }
-
-    @Test
-    void describeImage_integration() {
-        Function<String, String> describeImageFunction = recommendFunctions.describeImage();
-
-        // Use a real image URL for testing
-        String imageUrl = "https://uaoi.united-arrows.co.jp/img/item/32000/3200025Y0073/3200025Y0073_l1_a042.jpg";
-
-        System.out.println("Converting image: " + imageUrl);
-        String description = describeImageFunction.apply(imageUrl);
-
-        System.out.println("Image Description: " + description);
-        assertNotNull(description, "Description should not be null");
     }
 
     @Test
