@@ -29,8 +29,8 @@ export const Login: React.FC = () => {
 
             const response = await cognitoClient.send(command);
 
-            if (response.AuthenticationResult) {
-                login(username);
+            if (response.AuthenticationResult && response.AuthenticationResult.IdToken) {
+                login(username, response.AuthenticationResult.IdToken);
                 navigate('/');
             } else {
                 setError("Login failed. Please check your credentials.");
