@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ProductVectorization } from './components/ProductVectorization';
 import { ImageDescription } from './components/ImageDescription';
@@ -20,6 +20,12 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
 const MainLayout: React.FC = () => {
   const { logout } = useAuth();
+  const [generatedData, setGeneratedData] = useState<{ imageUrl: string; description: string } | null>(null);
+
+  const handleDescriptionGenerated = (imageUrl: string, description: string) => {
+    setGeneratedData({ imageUrl, description });
+  };
+
   return (
     <div className="app-container">
       <header className="app-header">
@@ -32,10 +38,13 @@ const MainLayout: React.FC = () => {
       <main className="app-main">
         <ApiKeyInput />
         <div className="component-wrapper">
-          <ImageDescription />
+          <ImageDescription onDescriptionGenerated={handleDescriptionGenerated} />
         </div>
         <div className="component-wrapper">
-          <ProductVectorization />
+          <ProductVectorization
+            initialImageUrl={generatedData?.imageUrl}
+            initialDescription={generatedData?.description}
+          />
         </div>
       </main>
     </div>

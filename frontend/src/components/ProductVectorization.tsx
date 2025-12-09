@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { vectorizeProduct } from '../api/client';
 import { getEmbedding } from '../api/openai';
 import { useOpenAIKey } from '../context/OpenAIKeyContext';
 
-export const ProductVectorization: React.FC = () => {
+interface ProductVectorizationProps {
+    initialImageUrl?: string;
+    initialDescription?: string;
+}
+
+export const ProductVectorization: React.FC<ProductVectorizationProps> = ({ initialImageUrl, initialDescription }) => {
     const [description, setDescription] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const { apiKey } = useOpenAIKey();
+
+    useEffect(() => {
+        if (initialImageUrl) setImageUrl(initialImageUrl);
+        if (initialDescription) setDescription(initialDescription);
+    }, [initialImageUrl, initialDescription]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

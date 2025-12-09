@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { describeImage } from '../api/openai';
 import { useOpenAIKey } from '../context/OpenAIKeyContext';
 
-export const ImageDescription: React.FC = () => {
+export const ImageDescription: React.FC<{
+    onDescriptionGenerated?: (imageUrl: string, description: string) => void;
+}> = ({ onDescriptionGenerated }) => {
     const [imageUrl, setImageUrl] = useState('');
     const [result, setResult] = useState<string | null>(null);
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -21,6 +23,9 @@ export const ImageDescription: React.FC = () => {
             const description = await describeImage(imageUrl, apiKey);
             setResult(description);
             setStatus('success');
+            if (onDescriptionGenerated) {
+                onDescriptionGenerated(imageUrl, description);
+            }
         } catch (error) {
             console.error(error);
             setStatus('error');
