@@ -22,18 +22,17 @@ client.interceptors.request.use(
     }
 );
 
-export const vectorizeProduct = async (description: string) => {
-    // Spring Cloud Function exposes functions at endpoints matching their names
-    // For Consumer<String>, it usually accepts the body as the input.
-    await client.post('/vectorizeProduct', description, {
-        headers: { 'Content-Type': 'text/plain' }
+export const vectorizeProduct = async (text: string, vector: number[], imageUrl: string) => {
+    // Send text, vector, and imageUrl to the backend
+    await client.post('/vectorizeProduct', {
+        text,
+        vector,
+        imageUrl
     });
 };
 
+/* describeImage is now handled directly by frontend via OpenAI API
 export const describeImage = async (imageUrl: string) => {
-    // For Function<String, String>, it accepts input and returns output.
-    const response = await client.post('/describeImage', imageUrl, {
-        headers: { 'Content-Type': 'text/plain' }
-    });
-    return response.data;
+    ...
 };
+*/

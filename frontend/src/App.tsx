@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ProductVectorization } from './components/ProductVectorization';
 import { ImageDescription } from './components/ImageDescription';
 import { Login } from './components/Login';
 import { AuthProvider, useAuth } from './auth/AuthContext';
+import { OpenAIKeyProvider } from './context/OpenAIKeyContext';
+import { ApiKeyInput } from './components/ApiKeyInput';
 import './App.css';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -14,8 +16,16 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   return <>{children}</>;
 };
 
+// ... (imports)
+
 const MainLayout: React.FC = () => {
   const { logout } = useAuth();
+  const [generatedData, setGeneratedData] = useState<{ imageUrl: string; description: string } | null>(null);
+
+  const handleDescriptionGenerated = (imageUrl: string, description: string) => {
+    setGeneratedData({ imageUrl, description });
+  };
+
   return (
     <div className="app-container">
       <header className="app-header">
@@ -26,11 +36,15 @@ const MainLayout: React.FC = () => {
         </div>
       </header>
       <main className="app-main">
+        <ApiKeyInput />
         <div className="component-wrapper">
-          <ProductVectorization />
+          <ImageDescription onDescriptionGenerated={handleDescriptionGenerated} />
         </div>
         <div className="component-wrapper">
-          <ImageDescription />
+          <ProductVectorization
+            initialImageUrl={generatedData?.imageUrl}
+            initialDescription={generatedData?.description}
+          />
         </div>
       </main>
     </div>
@@ -40,19 +54,21 @@ const MainLayout: React.FC = () => {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <MainLayout />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Router>
+      <OpenAIKeyProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Router>
+      </OpenAIKeyProvider>
     </AuthProvider>
   );
 }
