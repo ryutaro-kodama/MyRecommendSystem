@@ -28,11 +28,12 @@ export const ProductVectorization: React.FC<ProductVectorizationProps> = ({ init
 
         setStatus('loading');
         try {
+            const descriptionFormalized = description.replaceAll("\'", "\"").trim();
             // 1. Get Embedding from OpenAI (Frontend)
-            const embedding = await getEmbedding(description, apiKey);
+            const embedding = await getEmbedding(descriptionFormalized, apiKey);
 
             // 2. Send text, vector, and image URL to Backend
-            await vectorizeProduct(description, embedding, imageUrl);
+            await vectorizeProduct(descriptionFormalized, embedding, imageUrl);
 
             setStatus('success');
             setDescription('');

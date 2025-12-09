@@ -51,3 +51,10 @@ jobs:
           aws lambda update-function-code \
             --function-name MyRecommendSystem \
             --zip-file fileb://build/libs/recommend-system-0.0.1-SNAPSHOT-aws.jar
+
+      - name: Deploy to AWS Lambda - List
+        # PLEASE UPDATE 'YOUR_LAMBDA_FUNCTION_NAME' with your actual Lambda function name
+        run: |
+          aws lambda update-function-code \
+            --function-name MyRecommendSystem-List \
+            --zip-file fileb://build/libs/recommend-system-0.0.1-SNAPSHOT-aws.jar

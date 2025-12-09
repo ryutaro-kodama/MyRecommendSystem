@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ProductVectorization } from './components/ProductVectorization';
 import { ImageDescription } from './components/ImageDescription';
+import { VectorList } from './components/VectorList';
 import { Login } from './components/Login';
 import { AuthProvider, useAuth } from './auth/AuthContext';
 import { OpenAIKeyProvider } from './context/OpenAIKeyContext';
@@ -35,7 +36,7 @@ const MainLayout: React.FC = () => {
           <button onClick={logout} className="logout-btn">Logout</button>
         </div>
       </header>
-      <main className="app-main">
+      <main>
         <ApiKeyInput />
         <div className="component-wrapper">
           <ImageDescription onDescriptionGenerated={handleDescriptionGenerated} />
@@ -46,8 +47,11 @@ const MainLayout: React.FC = () => {
             initialDescription={generatedData?.description}
           />
         </div>
+        <div className="component-wrapper">
+          <VectorList />
+        </div>
       </main>
-    </div>
+    </div >
   );
 };
 

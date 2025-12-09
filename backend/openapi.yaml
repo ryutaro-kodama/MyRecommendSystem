@@ -40,3 +40,29 @@ paths:
           description: Vectorization successful
         '500':
           description: Internal Server Error
+
+  /listVectors:
+    get:
+      summary: List Vectors
+      description: Returns a list of all vectors
+      operationId: listVectors
+      responses:
+        '200':
+          description: A list of vectors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    originalText:
+                      type: string
+                    imageUrl:
+                      type: string
+                    vector:
+                      type: array
+                      items:
+                        type: number
+        '500':
+          description: Internal Server Error
