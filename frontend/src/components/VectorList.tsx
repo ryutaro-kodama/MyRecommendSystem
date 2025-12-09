@@ -128,7 +128,7 @@ export const VectorList: React.FC = () => {
                                             >
                                                 Get
                                             </button>
-                                            {similarResults[v.key] && similarResults[v.key].map((v, i) => (
+                                            {similarResults[v.key] && similarResults[v.key].map((v) => (
                                                 <img
                                                     src={v.imageUrl}
                                                     alt="Product"
