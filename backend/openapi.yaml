@@ -11,43 +11,32 @@ paths:
   /vectorizeProduct:
     post:
       summary: Vectorize Product Description
-      description: Accepts a product description, generates an embedding using OpenAI, and saves it to S3.
+      description: Accepts a product description and its vector, and saves it to S3.
       operationId: vectorizeProduct
       requestBody:
-        description: Product description text
+        description: Product description text and vector
         required: true
         content:
-          text/plain:
+          application/json:
             schema:
-              type: string
-              example: "A high-quality leather wallet with multiple card slots."
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: The original text
+                vector:
+                  type: array
+                  items:
+                    type: number
+                  description: The embedding vector
+                imageUrl:
+                  type: string
+                  description: The URL of the product image
+              required:
+                - text
+                - vector
       responses:
         '200':
           description: Vectorization successful
-        '500':
-          description: Internal Server Error
-
-  /describeImage:
-    post:
-      summary: Describe Product Image
-      description: Accepts an image URL, uses OpenAI Vision to generate a description.
-      operationId: describeImage
-      requestBody:
-        description: URL of the product image
-        required: true
-        content:
-          text/plain:
-            schema:
-              type: string
-              format: uri
-              example: "https://example.com/product-image.jpg"
-      responses:
-        '200':
-          description: Image description generated successfully
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "The image shows a brown leather wallet..."
         '500':
           description: Internal Server Error

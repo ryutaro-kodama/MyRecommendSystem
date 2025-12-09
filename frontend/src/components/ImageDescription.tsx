@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
-import { describeImage } from '../api/client';
+import { describeImage } from '../api/openai';
+import { useOpenAIKey } from '../context/OpenAIKeyContext';
 
 export const ImageDescription: React.FC = () => {
     const [imageUrl, setImageUrl] = useState('');
     const [result, setResult] = useState<string | null>(null);
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const { apiKey } = useOpenAIKey();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!apiKey) {
+            alert('Please set your OpenAI API Key first.');
+            return;
+        }
+
         setStatus('loading');
         setResult(null);
         try {
-            const description = await describeImage(imageUrl);
+            const description = await describeImage(imageUrl, apiKey);
             setResult(description);
             setStatus('success');
         } catch (error) {
@@ -23,6 +30,11 @@ export const ImageDescription: React.FC = () => {
     return (
         <div className="p-4 border rounded shadow-md bg-white">
             <h2 className="text-xl font-bold mb-4">Product Image Description</h2>
+            {!apiKey && (
+                <div className="mb-4 p-2 bg-yellow-100 text-yellow-800 rounded">
+                    ⚠️ API Key is missing. Please enter it above.
+                </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700">Image URL</label>
@@ -36,7 +48,7 @@ export const ImageDescription: React.FC = () => {
                 </div>
                 <button
                     type="submit"
-                    disabled={status === 'loading'}
+                    disabled={status === 'loading' || !apiKey}
                     className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50"
                 >
                     {status === 'loading' ? 'Generating...' : 'Generate Description'}
@@ -45,7 +57,7 @@ export const ImageDescription: React.FC = () => {
                 {result && (
                     <div className="mt-4 p-4 bg-gray-50 rounded">
                         <h3 className="font-semibold mb-2">Generated Description:</h3>
-                        <p className="text-gray-800">{result}</p>
+                        <p className="text-gray-800 whitespace-pre-wrap">{result}</p>
                     </div>
                 )}
             </form>

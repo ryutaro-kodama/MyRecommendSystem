@@ -29,8 +29,8 @@ public class S3VectorsRepository {
     public void put(String key, VectorData data, Document metadata) {
         try {
             PutVectorsRequest request = PutVectorsRequest.builder()
-                    .vectorBucketName(S3_VECTOR_BUCKET)
-                    .indexName(S3_INDEX_NAME)
+//                    .vectorBucketName(S3_VECTOR_BUCKET)
+//                    .indexName(S3_INDEX_NAME)
                     .indexArn(S3_INDEX_ARN)
                     .vectors(PutInputVector.builder().key(key).data(data).metadata(metadata).build())
                     .build();
