@@ -12,12 +12,6 @@ import java.util.List;
 public class S3VectorsRepository {
     private final S3VectorsClient s3VectorsClient;
 
-    @Value("${s3.vector.bucket-name}")
-    private String S3_VECTOR_BUCKET;
-
-    @Value("${s3.vector.index-name}")
-    private String S3_INDEX_NAME;
-
     @Value("${s3.vector.index-arn}")
     private String S3_INDEX_ARN;
 
@@ -50,6 +44,39 @@ public class S3VectorsRepository {
             return response.vectors();
         } catch (Exception e) {
             throw new RuntimeException("Failed to list vectors", e);
+        }
+    }
+
+    public List<GetOutputVector> get(String key) {
+        try {
+            GetVectorsRequest request = GetVectorsRequest.builder()
+                    .indexArn(S3_INDEX_ARN)
+                    .returnData(true)
+                    .returnMetadata(false)
+                    .keys(key)
+                    .build();
+            GetVectorsResponse response = s3VectorsClient.getVectors(request);
+            System.out.println(key);
+            System.out.println(response.toString());
+            System.out.println(response.vectors().size());
+            return response.vectors();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get vector from S3", e);
+        }
+    }
+
+    public List<QueryOutputVector> query(VectorData vectorData, int topK) {
+        try {
+            QueryVectorsRequest request = QueryVectorsRequest.builder()
+                    .indexArn(S3_INDEX_ARN)
+                    .returnMetadata(true)
+                    .queryVector(vectorData)
+                    .topK(topK)
+                    .build();
+            QueryVectorsResponse response = s3VectorsClient.queryVectors(request);
+            return response.vectors();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to search vectors", e);
         }
     }
 }

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../auth/AuthContext';
-import { listVectors } from '../api/client';
+import { listVectors, findSimilar } from '../api/client';
 
 interface VectorData {
+    key: string;
     originalText: string;
     imageUrl: string;
     vector: number[];
@@ -12,6 +13,7 @@ export const VectorList: React.FC = () => {
     const [vectors, setVectors] = useState<VectorData[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [similarResults, setSimilarResults] = useState<{ [key: string]: VectorData[] }>({});
     const { token } = useAuth();
 
     const fetchVectors = async () => {
@@ -36,6 +38,28 @@ export const VectorList: React.FC = () => {
             setError(err.message || 'An error occurred');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleFindSimilar = async (key: string) => {
+        try {
+            const results = await findSimilar(key);
+
+            results.forEach((v: VectorData) => {
+                v.imageUrl = v.imageUrl.substring(1, v.imageUrl.length - 1);
+                // originalText is expected to be a JSON string. We will parse it in the render or here. 
+                // However, the interface defines it as string. Let's keep it as string in the data object 
+                // but parse it when rendering or extend the interface locally.
+                v.originalText = v.originalText.replaceAll("\\\"", "\"").replaceAll("\'", "\"");
+                v.originalText = v.originalText.substring(1, v.originalText.length - 1);
+            });
+
+            const newSimilarResults = { ...similarResults };
+            newSimilarResults[key] = results;
+            setSimilarResults(newSimilarResults);
+        } catch (err: any) {
+            console.error("Failed to find similar vectors", err);
+            alert("Failed to find similar vectors");
         }
     };
 
@@ -73,13 +97,14 @@ export const VectorList: React.FC = () => {
                                 <th>Description</th>
                                 <th>Image</th>
                                 <th>Vector (first 5 dims)</th>
+                                <th>Similar Results</th>
                             </tr>
                         </thead>
                         <tbody>
                             {vectors.map((v, i) => {
                                 const parsed = parseOriginalText(v.originalText);
                                 return (
-                                    <tr key={i}>
+                                    <tr key={i} data-key={v.key}>
                                         <td>{parsed.color}</td>
                                         <td>{parsed.quantity}</td>
                                         <td>{parsed.genre}</td>
@@ -93,7 +118,24 @@ export const VectorList: React.FC = () => {
                                                 />
                                             )}
                                         </td>
-                                        <td>[{v.vector.slice(0, 5).join(', ')}...]</td>
+                                        <td>
+                                            [{v.vector.slice(0, 5).join(', ')}...]
+                                        </td>
+                                        <td>
+                                            <button
+                                                onClick={() => handleFindSimilar(v.key)}
+                                                style={{ marginLeft: '10px' }}
+                                            >
+                                                Get
+                                            </button>
+                                            {similarResults[v.key] && similarResults[v.key].map((v, i) => (
+                                                <img
+                                                    src={v.imageUrl}
+                                                    alt="Product"
+                                                    style={{ maxWidth: '100px', maxHeight: '100px', objectFit: 'cover' }}
+                                                />
+                                            ))}
+                                        </td>
                                     </tr>
                                 );
                             })}
