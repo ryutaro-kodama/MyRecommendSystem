@@ -32,10 +32,10 @@ const MainLayout: React.FC = () => {
       <main className="app-main">
         <ApiKeyInput />
         <div className="component-wrapper">
-          <ProductVectorization />
+          <ImageDescription />
         </div>
         <div className="component-wrapper">
-          <ImageDescription />
+          <ProductVectorization />
         </div>
       </main>
     </div>
