@@ -39,7 +39,7 @@ public class RecommendFunctions {
         };
     }
 
-    public record ListVectorResponse(String originalText, String imageUrl, List<Float> vector) {
+    public record ListVectorResponse(String key, String originalText, String imageUrl, List<Float> vector) {
 
     }
 
@@ -50,6 +50,7 @@ public class RecommendFunctions {
             return s3VectorsRepository.list().stream()
                     .map(v -> {
                         return new ListVectorResponse(
+                                v.key(),
                                 v.metadata().asMap().get("original_text").toString(),
                                 v.metadata().asMap().get("image_url").toString(),
                                 v.data().float32().subList(0, 5)

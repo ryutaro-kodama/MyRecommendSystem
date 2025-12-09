@@ -3,6 +3,7 @@ import { useAuth } from '../auth/AuthContext';
 import { listVectors } from '../api/client';
 
 interface VectorData {
+    key: string;
     originalText: string;
     imageUrl: string;
     vector: number[];
@@ -79,7 +80,7 @@ export const VectorList: React.FC = () => {
                             {vectors.map((v, i) => {
                                 const parsed = parseOriginalText(v.originalText);
                                 return (
-                                    <tr key={i}>
+                                    <tr key={i} data-key={v.key}>
                                         <td>{parsed.color}</td>
                                         <td>{parsed.quantity}</td>
                                         <td>{parsed.genre}</td>
