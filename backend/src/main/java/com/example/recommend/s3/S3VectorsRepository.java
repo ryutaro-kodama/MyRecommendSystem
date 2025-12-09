@@ -1,13 +1,12 @@
 package com.example.recommend.s3;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import software.amazon.awssdk.core.document.Document;
 import software.amazon.awssdk.services.s3vectors.S3VectorsClient;
-import software.amazon.awssdk.services.s3vectors.model.PutInputVector;
-import software.amazon.awssdk.services.s3vectors.model.PutVectorsRequest;
-import software.amazon.awssdk.services.s3vectors.model.VectorData;
+import software.amazon.awssdk.services.s3vectors.model.*;
+
+import java.util.List;
 
 @Repository
 public class S3VectorsRepository {
@@ -29,14 +28,28 @@ public class S3VectorsRepository {
     public void put(String key, VectorData data, Document metadata) {
         try {
             PutVectorsRequest request = PutVectorsRequest.builder()
-//                    .vectorBucketName(S3_VECTOR_BUCKET)
-//                    .indexName(S3_INDEX_NAME)
+                    // .vectorBucketName(S3_VECTOR_BUCKET)
+                    // .indexName(S3_INDEX_NAME)
                     .indexArn(S3_INDEX_ARN)
                     .vectors(PutInputVector.builder().key(key).data(data).metadata(metadata).build())
                     .build();
             s3VectorsClient.putVectors(request);
         } catch (Exception e) {
             throw new RuntimeException("Failed to save vector to S3", e);
+        }
+    }
+
+    public List<ListOutputVector> list() {
+        try {
+            ListVectorsRequest request = ListVectorsRequest.builder()
+                    .indexArn(S3_INDEX_ARN)
+                    .returnData(true)
+                    .returnMetadata(true)
+                    .build();
+            ListVectorsResponse response = s3VectorsClient.listVectors(request);
+            return response.vectors();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to list vectors", e);
         }
     }
 }

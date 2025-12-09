@@ -31,6 +31,11 @@ export const vectorizeProduct = async (text: string, vector: number[], imageUrl:
     });
 };
 
+export const listVectors = async () => {
+    const response = await client.get('/listVectors');
+    return response.data;
+};
+
 /* describeImage is now handled directly by frontend via OpenAI API
 export const describeImage = async (imageUrl: string) => {
     ...
