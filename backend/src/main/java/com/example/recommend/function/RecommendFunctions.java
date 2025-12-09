@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import software.amazon.awssdk.core.document.Document;
-import software.amazon.awssdk.services.s3vectors.model.ListOutputVector;
 import software.amazon.awssdk.services.s3vectors.model.VectorData;
 
 import java.util.List;
@@ -39,23 +38,44 @@ public class RecommendFunctions {
         };
     }
 
-    public record ListVectorResponse(String key, String originalText, String imageUrl, List<Float> vector) {
+    public record VectorResponse(String key, String originalText, String imageUrl, List<Float> vector) {
 
     }
 
     @Bean
-    public Supplier<List<ListVectorResponse>> listVectors() {
+    public Supplier<List<VectorResponse>> listVectors() {
         // 引数を受け取らない形 (() -> ...) に変更
         return () -> {
             return s3VectorsRepository.list().stream()
                     .map(v -> {
-                        return new ListVectorResponse(
+                        return new VectorResponse(
                                 v.key(),
                                 v.metadata().asMap().get("original_text").toString(),
                                 v.metadata().asMap().get("image_url").toString(),
-                                v.data().float32().subList(0, 5)
-                        );
+                                v.data().float32().subList(0, 5));
                     })
+                    .toList();
+        };
+    }
+
+    public record FindSimilarRequest(String key) {
+    }
+
+    @Bean
+    public Function<FindSimilarRequest, List<VectorResponse>> findSimilar() {
+        return request -> {
+            String key = request.key();
+            var targetVector = s3VectorsRepository.get(key).get(0);
+            System.out.println(targetVector.data().float32());
+
+            var results = s3VectorsRepository.query(targetVector.data(), 3);
+            return results.stream()
+                    .map(v -> new VectorResponse(
+                            v.key(),
+                            v.metadata().asMap().get("original_text").toString(),
+                            v.metadata().asMap().get("image_url").toString(),
+                            // クエリ対象のベクトルデータは取得していないため
+                            null))
                     .toList();
         };
     }

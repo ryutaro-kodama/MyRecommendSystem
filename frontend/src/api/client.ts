@@ -36,6 +36,13 @@ export const listVectors = async () => {
     return response.data;
 };
 
+export const findSimilar = async (key: string) => {
+    const response = await client.post('/findSimilar', {
+        key
+    });
+    return response.data;
+};
+
 /* describeImage is now handled directly by frontend via OpenAI API
 export const describeImage = async (imageUrl: string) => {
     ...
