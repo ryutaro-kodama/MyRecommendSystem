@@ -68,7 +68,7 @@ public class RecommendFunctions {
             var targetVector = s3VectorsRepository.get(key).get(0);
             System.out.println(targetVector.data().float32());
 
-            var results = s3VectorsRepository.query(targetVector.data(), 3);
+            var results = s3VectorsRepository.query(targetVector.data(), 5);
             return results.stream()
                     .map(v -> new VectorResponse(
                             v.key(),
