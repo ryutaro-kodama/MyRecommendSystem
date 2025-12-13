@@ -1,0 +1,7 @@
+{
+    "name": "Java 21 & Node",
+    "image": "mcr.microsoft.com/devcontainers/java:dev-17-bookworm",
+    "features": {
+        "ghcr.io/devcontainers/features/node:1": {}
+    }
+}
